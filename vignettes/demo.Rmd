@@ -1,0 +1,152 @@
+---
+title: "Using SADISA"
+author: "Rampal S. Etienne"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"Using SADISA"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## SADISA introduction
+
+SADISA contains three user-level functions, SADISA_loglik, SADISA_ML and SADISA_test. SADISA_loglik calculates the loglikelihood (sampling formula) of a set of abundances given a mainland-island community model, i.e. a model for the mainland (metacommunity) and the island (local community) that is connected to it via dispersal, and SADISA_ML finds the parameters that maximizes that loglikelihood. Tests that replicate the analyses in Haegema & Etienne (2016) are provided in SADISA_test. The model makes the Independent-Species (IS) assumption, and therefore differs from the sampling formulae that have been derived within the context of neutral theory, which all assume that individuals of species interact, but all in the same way (zero-sum constraint). Mathematically, the sampling formula is different, but in many cases the loglikelihood is practically indistinguishable from that obtained earlier, and so are the maximum likelihood parameters. The IS approach allows for a much wider set of data and models than the zero-sum constraint.
+
+The package contains a fourth documented function, integral_peak, which is a numerical procedure for evaluating the integrals needed in the IS approach. The function is exported for use in other packages, but does not need to be called independently for the purposes of SADISA.
+
+We represent the data, $\mathcal{D}$, of a single community sample as
+abundance frequencies $s_{k}$ (number of species that are observed $k$ times
+in the sample). The sampling formula is given by a product of Poisson
+samples with parameters $\lambda _{k}$  
+
+$\mathbb{P}(\mathcal{D})=\mathrm{e}^{-\Lambda }\prod_{k\mid s_{k}>0}\frac{\lambda _{k}^{s_{k}}}{s_{k}!}$
+
+with $\lambda_{k}$ the expected number of observed species with abundance $k$,
+
+$\lambda _{k} = \mathbb{E}s_{k}=\int_0^{\infty} \mathbb{P}(k|x)\,\rho (x)\,\mathrm{d}x$
+
+and $\Lambda$ the expected number of observed species,
+
+$\Lambda = \sum_{k>0}\mathbb{E}s_{k}=\int \mathbb{P}(\text{obs}|x)\,\rho (x)\,\mathrm{d}x$
+
+where $\mathbb{P}(\text{obs}|x)$ the probability that a species with relative abundance x in the metacommunity is present in the data,
+
+$\mathbb{P}(\text{obs}|x)=1-\mathbb{P}(0|x)$
+
+
+## SADISA usage
+
+First clear memory and load the package:
+
+```{r}
+rm(list = ls())
+library(SADISA)
+```
+
+Then, choose an abundance data set.
+
+For a single sample, you can use:
+
+```{r}
+abund <- c(1717,1681,983,788,755,724,681,644,617,381,379,376,364,346,345,325,322,294,289,
+           288,285,264,248,244,236,236,229,218,203,201,188,184,177,167,164,163,156,149,147,
+           143,121,118,111,101,100,99,98,98,98,93,92,92,88,87,85,85,82,81,80,78,76,70,68,68,
+           67,67,64,63,63,61,58,55,55,55,54,52,52,51,50,49,47,45,45,43,43,41,40,39,39,38,38,
+           36,33,33,33,33,33,32,31,30,29,29,28,28,28,27,27,27,26,26,26,26,25,25,25,25,23,23,
+           23,23,22,22,22,21,21,21,21,20,19,18,17,16,16,16,15,15,15,14,14,14,13,13,13,13,13,
+           12,12,12,12,12,12,12,10,10,10,10,10,10,10,9,9,8,8,8,7,7,7,7,7,7,6,5,5,5,5,5,5,5,5,
+           4,4,4,4,4,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+           1,1,1,1,1)
+```
+
+This is one of the censuses of the 50 ha Barro Colorado Island forest plot in Panama.
+
+Then, provide the model that you want the loglikelihood for. For instance, if we want a metacommunity that is neutral with point speciation, and a local community that is neutral but with limited dispersal from the metacommunity, the model is:
+
+```{r}
+model <- c('pm','dl')
+```
+
+with 'pm' for point mutation and 'dl' for dispersal limitation.
+
+Then choose values for the model parameters. These are $\theta$, the fundamental biodiversity parameter, and $I$, the fundamental dispersal parameter. Let us choose:
+
+```{r}
+pars <- c(4.793930230665386e+01, 2.174825700126286e+03)
+```
+
+Let us now calculate the loglikelihood and store it in 'result':
+
+```{r}
+result <- SADISA_loglik(abund = abund,pars = pars,model = model)
+result
+```
+
+Have a look at the test file SADISA_test.R included in the package for further examples of SADISA_loglik.
+
+Let us now try to find the maximum likelihood parameters for this model and this data set. We need to initialize the optimization by setting initial parameter values, for example:
+
+```{r}
+initpars <- c(40,2000)
+```
+
+We must also specify which parameter will be optimized or fixed. We store this information in the variable 'labelpars'. If we fix a parameter (at its initial value provided before), then 'labelpars' gets a 0. If we want to optimize it, we set 'labelpars' at 1. The third option is to set the parameter equal to another parameter. This is (only) useful for a case of multiple samples or multiple guilds where we want to use only one local community parameter that applies to all samples/guilds. Then 'labelpars' receives a 2. But this is not relevant here, because we have only one sample.
+
+If we want to only optimize the first parameter (theta in this model), then we would have put labelpars <- c(1,0). But let us optimize both parameters. So we set:
+
+```{r}
+labelpars <- c(1,1)
+```
+
+To run the optimization we type:
+
+```{r}
+result <- SADISA_ML(abund = abund,initpars = initpars,labelpars = labelpars,model = model)
+result
+```
+
+Let us look at one more example with multiple samples. We load the available data sets:
+
+```{r}
+data(datasets)
+```
+
+dataset$dset2.abunvec contains various data sets with multiple samples. Let us select the first one:
+
+```{r}
+abund <- datasets$dset2.abunvec[[1]]
+abund
+```
+
+Because this data set contains three samples we need to specify parameters for three samples, which we take from the file fitresult.RData provided with the package:
+
+```{r}
+data(fitresults)
+initpars <- fitresults$fit4.parsopt[[1]]
+for(i in 1:3) names(initpars[[i]]) = c('theta','I')
+initpars
+```
+
+Note that we have named the parameters. Let us fix $theta$ and optimize all the $I$ parameters assuming they are all equal. This can be coded in labelpars as follows:
+
+```{r}
+labelpars <- rbind(c(0,1),c(2,2),c(2,2))
+labelpars
+
+```
+
+Here we set the labelpars for theta of the second and third sample at 2, but this has no meaning.
+
+Finally we run the optimization by adding the option mult = 'ms':
+
+```{r}
+result <- SADISA_ML(abund = abund,initpars = initpars,labelpars = labelpars,model = model,mult = 'ms')
+result
+```
+
+We observe that the starting values were indeed the optimal values.
+
+Have fun with SADISA!
+
+Haegeman, B. & Etienne, R.S. (2016). A general sampling formula for community abundance data. Methods in Ecology & Evolution. In review.

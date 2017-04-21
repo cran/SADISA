@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Rampal S. Etienne" />
+
+<meta name="date" content="2017-04-21" />
+
+<title>Using SADISA</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Using SADISA</h1>
+<h4 class="author"><em>Rampal S. Etienne</em></h4>
+<h4 class="date"><em>2017-04-21</em></h4>
+
+
+
+<div id="sadisa-introduction" class="section level2">
+<h2>SADISA introduction</h2>
+<p>SADISA contains three user-level functions, SADISA_loglik, SADISA_ML and SADISA_test. SADISA_loglik calculates the loglikelihood (sampling formula) of a set of abundances given a mainland-island community model, i.e. a model for the mainland (metacommunity) and the island (local community) that is connected to it via dispersal, and SADISA_ML finds the parameters that maximizes that loglikelihood. Tests that replicate the analyses in Haegema &amp; Etienne (2016) are provided in SADISA_test. The model makes the Independent-Species (IS) assumption, and therefore differs from the sampling formulae that have been derived within the context of neutral theory, which all assume that individuals of species interact, but all in the same way (zero-sum constraint). Mathematically, the sampling formula is different, but in many cases the loglikelihood is practically indistinguishable from that obtained earlier, and so are the maximum likelihood parameters. The IS approach allows for a much wider set of data and models than the zero-sum constraint.</p>
+<p>The package contains a fourth documented function, integral_peak, which is a numerical procedure for evaluating the integrals needed in the IS approach. The function is exported for use in other packages, but does not need to be called independently for the purposes of SADISA.</p>
+<p>We represent the data, <span class="math inline">\(\mathcal{D}\)</span>, of a single community sample as abundance frequencies <span class="math inline">\(s_{k}\)</span> (number of species that are observed <span class="math inline">\(k\)</span> times in the sample). The sampling formula is given by a product of Poisson samples with parameters <span class="math inline">\(\lambda _{k}\)</span></p>
+<p><span class="math inline">\(\mathbb{P}(\mathcal{D})=\mathrm{e}^{-\Lambda }\prod_{k\mid s_{k}&gt;0}\frac{\lambda _{k}^{s_{k}}}{s_{k}!}\)</span></p>
+<p>with <span class="math inline">\(\lambda_{k}\)</span> the expected number of observed species with abundance <span class="math inline">\(k\)</span>,</p>
+<p><span class="math inline">\(\lambda _{k} = \mathbb{E}s_{k}=\int_0^{\infty} \mathbb{P}(k|x)\,\rho (x)\,\mathrm{d}x\)</span></p>
+<p>and <span class="math inline">\(\Lambda\)</span> the expected number of observed species,</p>
+<p><span class="math inline">\(\Lambda = \sum_{k&gt;0}\mathbb{E}s_{k}=\int \mathbb{P}(\text{obs}|x)\,\rho (x)\,\mathrm{d}x\)</span></p>
+<p>where <span class="math inline">\(\mathbb{P}(\text{obs}|x)\)</span> the probability that a species with relative abundance x in the metacommunity is present in the data,</p>
+<p><span class="math inline">\(\mathbb{P}(\text{obs}|x)=1-\mathbb{P}(0|x)\)</span></p>
+</div>
+<div id="sadisa-usage" class="section level2">
+<h2>SADISA usage</h2>
+<p>First clear memory and load the package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>())
+<span class="kw">library</span>(SADISA)</code></pre></div>
+<p>Then, choose an abundance data set.</p>
+<p>For a single sample, you can use:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">abund &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1717</span>,<span class="dv">1681</span>,<span class="dv">983</span>,<span class="dv">788</span>,<span class="dv">755</span>,<span class="dv">724</span>,<span class="dv">681</span>,<span class="dv">644</span>,<span class="dv">617</span>,<span class="dv">381</span>,<span class="dv">379</span>,<span class="dv">376</span>,<span class="dv">364</span>,<span class="dv">346</span>,<span class="dv">345</span>,<span class="dv">325</span>,<span class="dv">322</span>,<span class="dv">294</span>,<span class="dv">289</span>,
+           <span class="dv">288</span>,<span class="dv">285</span>,<span class="dv">264</span>,<span class="dv">248</span>,<span class="dv">244</span>,<span class="dv">236</span>,<span class="dv">236</span>,<span class="dv">229</span>,<span class="dv">218</span>,<span class="dv">203</span>,<span class="dv">201</span>,<span class="dv">188</span>,<span class="dv">184</span>,<span class="dv">177</span>,<span class="dv">167</span>,<span class="dv">164</span>,<span class="dv">163</span>,<span class="dv">156</span>,<span class="dv">149</span>,<span class="dv">147</span>,
+           <span class="dv">143</span>,<span class="dv">121</span>,<span class="dv">118</span>,<span class="dv">111</span>,<span class="dv">101</span>,<span class="dv">100</span>,<span class="dv">99</span>,<span class="dv">98</span>,<span class="dv">98</span>,<span class="dv">98</span>,<span class="dv">93</span>,<span class="dv">92</span>,<span class="dv">92</span>,<span class="dv">88</span>,<span class="dv">87</span>,<span class="dv">85</span>,<span class="dv">85</span>,<span class="dv">82</span>,<span class="dv">81</span>,<span class="dv">80</span>,<span class="dv">78</span>,<span class="dv">76</span>,<span class="dv">70</span>,<span class="dv">68</span>,<span class="dv">68</span>,
+           <span class="dv">67</span>,<span class="dv">67</span>,<span class="dv">64</span>,<span class="dv">63</span>,<span class="dv">63</span>,<span class="dv">61</span>,<span class="dv">58</span>,<span class="dv">55</span>,<span class="dv">55</span>,<span class="dv">55</span>,<span class="dv">54</span>,<span class="dv">52</span>,<span class="dv">52</span>,<span class="dv">51</span>,<span class="dv">50</span>,<span class="dv">49</span>,<span class="dv">47</span>,<span class="dv">45</span>,<span class="dv">45</span>,<span class="dv">43</span>,<span class="dv">43</span>,<span class="dv">41</span>,<span class="dv">40</span>,<span class="dv">39</span>,<span class="dv">39</span>,<span class="dv">38</span>,<span class="dv">38</span>,
+           <span class="dv">36</span>,<span class="dv">33</span>,<span class="dv">33</span>,<span class="dv">33</span>,<span class="dv">33</span>,<span class="dv">33</span>,<span class="dv">32</span>,<span class="dv">31</span>,<span class="dv">30</span>,<span class="dv">29</span>,<span class="dv">29</span>,<span class="dv">28</span>,<span class="dv">28</span>,<span class="dv">28</span>,<span class="dv">27</span>,<span class="dv">27</span>,<span class="dv">27</span>,<span class="dv">26</span>,<span class="dv">26</span>,<span class="dv">26</span>,<span class="dv">26</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">23</span>,<span class="dv">23</span>,
+           <span class="dv">23</span>,<span class="dv">23</span>,<span class="dv">22</span>,<span class="dv">22</span>,<span class="dv">22</span>,<span class="dv">21</span>,<span class="dv">21</span>,<span class="dv">21</span>,<span class="dv">21</span>,<span class="dv">20</span>,<span class="dv">19</span>,<span class="dv">18</span>,<span class="dv">17</span>,<span class="dv">16</span>,<span class="dv">16</span>,<span class="dv">16</span>,<span class="dv">15</span>,<span class="dv">15</span>,<span class="dv">15</span>,<span class="dv">14</span>,<span class="dv">14</span>,<span class="dv">14</span>,<span class="dv">13</span>,<span class="dv">13</span>,<span class="dv">13</span>,<span class="dv">13</span>,<span class="dv">13</span>,
+           <span class="dv">12</span>,<span class="dv">12</span>,<span class="dv">12</span>,<span class="dv">12</span>,<span class="dv">12</span>,<span class="dv">12</span>,<span class="dv">12</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">9</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">8</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>,
+           <span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,
+           <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>)</code></pre></div>
+<p>This is one of the censuses of the 50 ha Barro Colorado Island forest plot in Panama.</p>
+<p>Then, provide the model that you want the loglikelihood for. For instance, if we want a metacommunity that is neutral with point speciation, and a local community that is neutral but with limited dispersal from the metacommunity, the model is:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'pm'</span>,<span class="st">'dl'</span>)</code></pre></div>
+<p>with ‘pm’ for point mutation and ‘dl’ for dispersal limitation.</p>
+<p>Then choose values for the model parameters. These are <span class="math inline">\(\theta\)</span>, the fundamental biodiversity parameter, and <span class="math inline">\(I\)</span>, the fundamental dispersal parameter. Let us choose:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">4.793930230665386e+01</span>, <span class="fl">2.174825700126286e+03</span>)</code></pre></div>
+<p>Let us now calculate the loglikelihood and store it in ‘result’:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result &lt;-<span class="st"> </span><span class="kw">SADISA_loglik</span>(<span class="dt">abund =</span> abund,<span class="dt">pars =</span> pars,<span class="dt">model =</span> model)
+result</code></pre></div>
+<pre><code>## [1] -317.7003</code></pre>
+<p>Have a look at the test file SADISA_test.R included in the package for further examples of SADISA_loglik.</p>
+<p>Let us now try to find the maximum likelihood parameters for this model and this data set. We need to initialize the optimization by setting initial parameter values, for example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">initpars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">40</span>,<span class="dv">2000</span>)</code></pre></div>
+<p>We must also specify which parameter will be optimized or fixed. We store this information in the variable ‘labelpars’. If we fix a parameter (at its initial value provided before), then ‘labelpars’ gets a 0. If we want to optimize it, we set ‘labelpars’ at 1. The third option is to set the parameter equal to another parameter. This is (only) useful for a case of multiple samples or multiple guilds where we want to use only one local community parameter that applies to all samples/guilds. Then ‘labelpars’ receives a 2. But this is not relevant here, because we have only one sample.</p>
+<p>If we want to only optimize the first parameter (theta in this model), then we would have put labelpars &lt;- c(1,0). But let us optimize both parameters. So we set:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">labelpars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)</code></pre></div>
+<p>To run the optimization we type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result &lt;-<span class="st"> </span><span class="kw">SADISA_ML</span>(<span class="dt">abund =</span> abund,<span class="dt">initpars =</span> initpars,<span class="dt">labelpars =</span> labelpars,<span class="dt">model =</span> model)</code></pre></div>
+<pre><code>## The loglikelihood for the initial parameter values is -320.9138.
+## 
+## Parameters after likelihood maximization:
+## [1]   47.93678 2175.26867
+## 
+## Maximum loglikelihood:
+##  -317.7003</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result</code></pre></div>
+<pre><code>## $pars
+## [1]   47.93678 2175.26867
+## 
+## $loglik
+## [1] -317.7003
+## 
+## $conv
+## [1] 0</code></pre>
+<p>Let us look at one more example with multiple samples. We load the available data sets:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(datasets)</code></pre></div>
+<p>dataset$dset2.abunvec contains various data sets with multiple samples. Let us select the first one:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">abund &lt;-<span class="st"> </span>datasets$dset2.abunvec[[<span class="dv">1</span>]]
+abund</code></pre></div>
+<pre><code>## [[1]]
+##   [1] 1717 1681  983  788  755  724  681  644  617  381  379  376  364  346
+##  [15]  345  325  322  294  289  288  285  264  248  244  236  236  229  218
+##  [29]  203  201  188  184    0  177  167  164  163  156  149  147  143    0
+##  [43]    0   22  121   20  118  111    0    0  101   21  100   99   98   98
+##  [57]   98   10   93   92   92   50   88   87   85   85    0   82   81   80
+##  [71]   78   76   70   52   68    0   68   67   67   64   63   63   61   58
+##  [85]    0   55   55   55   54   12   52   51   49    0    0   47    0   45
+##  [99]   45   43   43    0   41   40   39   39   38   38    0   36   25   19
+## [113]   33   12   33   33   33   33   32    0   21   31   13   30   29    0
+## [127]   29   28   28   28   27   27   27   26   26   26   26    0   25   25
+## [141]   25    1   23   23    0   23   23   22   22   21    2    0   21    5
+## [155]   15   18    0   17    1   16    4   16   16    0   15    0    0   15
+## [169]    0   14   14   14    0    0   13   13   13    0   13    0   12   12
+## [183]   12   12   12    0    0    0   10   10   10   10   10   10    9    9
+## [197]    8    5    3    0    8    1    8    7    7    7    7    7    7    0
+## [211]    2    3    6    0    0    0    0    5    5    0    5    0    5    5
+## [225]    5    0    4    0    4    0    0    0    0    4    4    0    3    3
+## [239]    3    0    3    0    0    0    3    3    0    0    3    0    0    2
+## [253]    0    0    2    0    2    1    0    2    0    2    0    2    0    0
+## [267]    0    2    2    0    2    0    2    2    1    0    1    1    0    1
+## [281]    0    0    0    1    1    0    0    0    0    1    0    0    0    0
+## [295]    0    0    1    0    0    0    0    0    0    1    1    1    0    1
+## [309]    0    1    1    1
+## 
+## [[2]]
+##   [1]  16   0   3   0   0   0   0   0   0  38   0   0   0   0   0   0   0
+##  [18]   0   0  15   0   0   0   0   0   0   0  38   0   0  36   0 179   0
+##  [35]   0   0   0   1   0  20   0   0   0 122   0   0   3   0 102   0   0
+##  [52]   0   0   0   0   0   0   0   4   1   0   0   4   1   0   0   0   0
+##  [69]   3   0   0   0   0   0   0   0   3   0   0   0   1   2   0   0  57
+##  [86]   0  13   0   1   0   0   0   0   0   0   3   0   1   0   0   1  42
+## [103]   0   0  36   0   0   1   0   0   0  34   0   0   2   0   0  31   0
+## [120]   0  31   0   0   0   0   0  13  14   1   1   0   5   0   0   0   2
+## [137]   0   0   0   6   7   0   0   0   0   0   0   0   0   0   0   0   0
+## [154]   1  19   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## [171]   0   0   0   0   0   0   0  13   0   0   0   0   0   0   0  12   0
+## [188]  11   0  10   0   0   1   3   1   1   9   0   3   8   0   0   0   0
+## [205]   0   0   0   0   1   6   6   6   0   0   0   5   5   0   2   0   0
+## [222]   5   0   1   0   0   0   4   1   0   0   0   0   0   0   0   0   0
+## [239]   0   0   0   0   0   3   2   0   0   3   0   0   3   0   0   2   2
+## [256]   2   0   2   2   0   0   0   0   0   0   2   2   0   0   2   0   2
+## [273]   0   0   1   2   0   0   1   0   1   1   1   0   0   1   0   0   1
+## [290]   0   1   1   0   1   1   1   1   1   1   0   0   1   1   0   0   1
+## [307]   1   0   1   0   0   0
+## 
+## [[3]]
+##   [1]   1   3   0  54   8   0   0   1  58   0   0   1   0 227   0  36   4
+##  [18]  10  77   2   0   6   0  53  28 218   0   0   7   0   0   1   0   0
+##  [35]   7   5   0   0   0   0  20 129 126   0   3 120   0   0   0 102   0
+##  [52] 101   0   0   0   0   8  97   0   0   0  89  57   6   7   0  82   0
+##  [69]   0   0   1   0   1  69   0  68   0   2   0   0   0   0   0   2   0
+##  [86]  28   0   0   6  54  29  10   3  48  48   0  46   0   0   0   0   0
+## [103]   0  28   0   0   0   0  37   0  35   0   0  33   4   0   0   0   0
+## [120]  32   0   0  30   0   0  29   0   6   0   3   0   2   1   0   0   0
+## [137]   9  26   0   0   0  24   0   0  23   1   0   0   0   5  21  21   1
+## [154]  19   0   0  18   0  16   6  16   2   0  15   1  15  15   0  14   3
+## [171]   0   8  14  14   0   0   1   0   0  12   0   0   4   0   0   0  12
+## [188]   0   0   0   0   0   0   0   0   0   0   9   8   0   0   8   0   0
+## [205]   0   7   0   0   0   0   0   0   0   6   5   1   0   0   0   5   0
+## [222]   0   0   0   3   5   0   0   1   4   4   4   4   0   0   4   0   3
+## [239]   0   3   0   3   3   0   0   2   3   0   0   3   0   0   2   0   0
+## [256]   0   0   0   0   0   2   0   2   0   2   0   0   0   0   0   1   0
+## [273]   0   0   2   0   0   0   0   0   0   0   0   0   0   0   1   1   0
+## [290]   0   1   0   1   0   0   0   0   0   0   1   1   0   0   0   0   0
+## [307]   0   0   0   0   0   0</code></pre>
+<p>Because this data set contains three samples we need to specify parameters for three samples, which we take from the file fitresult.RData provided with the package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(fitresults)
+initpars &lt;-<span class="st"> </span>fitresults$fit4.parsopt[[<span class="dv">1</span>]]
+for(i in <span class="dv">1</span>:<span class="dv">3</span>) <span class="kw">names</span>(initpars[[i]]) =<span class="st"> </span><span class="kw">c</span>(<span class="st">'theta'</span>,<span class="st">'I'</span>)
+initpars</code></pre></div>
+<pre><code>## [[1]]
+##     theta         I 
+## 259.42034  44.45759 
+## 
+## [[2]]
+##     theta         I 
+## 259.42034  44.45759 
+## 
+## [[3]]
+##     theta         I 
+## 259.42034  44.45759</code></pre>
+<p>Note that we have named the parameters. Let us fix <span class="math inline">\(theta\)</span> and optimize all the <span class="math inline">\(I\)</span> parameters assuming they are all equal. This can be coded in labelpars as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">labelpars &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>),<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))
+labelpars</code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    0    1
+## [2,]    2    2
+## [3,]    2    2</code></pre>
+<p>Here we set the labelpars for theta of the second and third sample at 2, but this has no meaning.</p>
+<p>Finally we run the optimization by adding the option mult = ‘ms’:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result &lt;-<span class="st"> </span><span class="kw">SADISA_ML</span>(<span class="dt">abund =</span> abund,<span class="dt">initpars =</span> initpars,<span class="dt">labelpars =</span> labelpars,<span class="dt">model =</span> model,<span class="dt">mult =</span> <span class="st">'ms'</span>)</code></pre></div>
+<pre><code>## The loglikelihood for the initial parameter values is -1116.12.
+## 
+## Parameters after likelihood maximization:
+##         theta        I
+## [1,] 259.4203 44.45759
+## [2,] 259.4203 44.45759
+## [3,] 259.4203 44.45759
+## 
+## Maximum loglikelihood:
+##  -1116.12</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result</code></pre></div>
+<pre><code>## $pars
+##         theta        I
+## [1,] 259.4203 44.45759
+## [2,] 259.4203 44.45759
+## [3,] 259.4203 44.45759
+## 
+## $loglik
+## [1] -1116.12
+## 
+## $conv
+## [1] 0</code></pre>
+<p>We observe that the starting values were indeed the optimal values.</p>
+<p>Have fun with SADISA!</p>
+<p>Haegeman, B. &amp; Etienne, R.S. (2016). A general sampling formula for community abundance data. Methods in Ecology &amp; Evolution. In review.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
