@@ -4,15 +4,16 @@
 \alias{SADISA_loglik}
 \title{Computes loglikelihood for requested model}
 \usage{
-SADISA_loglik(abund, pars, model, mult = "mg")
+SADISA_loglik(abund, pars, model, mult = "single")
 }
 \arguments{
 \item{abund}{abundance vector or a list of abundance vectors.
 When a list is provided and mult = 'mg' (the default), it is assumed that the different vectors
-apply to different guilds. When mult = 'ms' then the different vectors apply to multiple samples.
+apply to different guilds. When mult = 'ms' then the different vectors apply to multiple samples
 from the same metacommunity. In this case the vectors should have equal lengths and may contain
 zeros because there may be species that occur in multiple samples and species that do not occur
-in some of the samples.}
+in some of the samples. When mult= 'both', abund should be a list of lists, each list representing
+multiple guilds within a sample}
 
 \item{pars}{a vector of model parameters or a list of vectors of model parameters.
 When a list is provided and mult = 'mg' (the default), it is assumed that the different vectors
@@ -25,8 +26,10 @@ The choices for the metacommunity model are: 'pm' (point mutation), 'rf' (random
 'pr' (protracted speciation), 'dd' (density-dependence).
 The choices for the local community model are: 'dl' (dispersal limitation), 'dd' (density-dependence).}
 
-\item{mult}{When set to 'mg' (the default) the loglikelihood for multiple guilds is computed.
-When set to 'ms' the loglikelihood for multiple samples from the same metacommunity is computed.}
+\item{mult}{When set to 'single' (the default), the loglikelihood for a single sample is computed
+When set to 'mg' the loglikelihood for multiple guilds is computed.
+When set to 'ms' the loglikelihood for multiple samples from the same metacommunity is computed.
+When set to 'both' the loglikelihood for multiple guilds within multiple samples is computed.}
 }
 \value{
 loglikelihood
@@ -49,8 +52,7 @@ cat('The difference between result and the value in fitresults.RData is:',
 result - fitresults$fit1a.llikopt[[1]]);
 }
 \references{
-Haegeman, B. & Etienne, R.S. (2016). A general sampling formula for community abundance data. Methods in Ecology & Evolution. In review.
+Haegeman, B. & R.S. Etienne (2017). A general sampling formula for community structure data. Methods in Ecology & Evolution 8: 1506-1519. doi: 10.1111/2041-210X.12807
 }
 \keyword{model}
 \keyword{species-abundance-distribution}
-

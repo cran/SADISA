@@ -2,5 +2,8 @@
 
 export(SADISA_ML)
 export(SADISA_loglik)
+export(SADISA_sim)
 export(SADISA_test)
+export(convert_fa2sf)
 export(integral_peak)
+export(pmdl_sim)

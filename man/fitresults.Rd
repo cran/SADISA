@@ -40,4 +40,3 @@ Maximum likelihood estimates and corresponding likelihood values for various fit
 Rampal S. Etienne & Bart Haegeman
 }
 \keyword{datasets}
-

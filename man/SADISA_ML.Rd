@@ -4,9 +4,10 @@
 \alias{SADISA_ML}
 \title{Performs maximum likelihood parameter estimation for requested model}
 \usage{
-SADISA_ML(abund, initpars, labelpars, model = c("pm", "dl"), mult = "mg",
-  tol = c(1e-06, 1e-06, 1e-06), maxiter = 1000 *
-  round((1.25)^length(which(labelpars == 1))), optimmethod = "subplex")
+SADISA_ML(abund, initpars, idpars, labelpars, model = c("pm", "dl"),
+  mult = "single", tol = c(1e-06, 1e-06, 1e-06), maxiter = min(1000 *
+  round((1.25)^sum(idpars)), 1e+05), optimmethod = "subplex",
+  num_cycles = 1)
 }
 \arguments{
 \item{abund}{abundance vector or a list of abundance vectors.
@@ -16,11 +17,18 @@ from the same metacommunity. In this case the vectors should have equal lengths 
 zeros because there may be species that occur in multiple samples and species that do not occur
 in some of the samples.}
 
-\item{initpars}{a vector, or - when there are multiple samples or multiple guilds - a matrix of parameter values}
+\item{initpars}{a vector of initial values of the parameters to be optimized and fixed. See \code{labelpars}
+for more explanation.}
 
-\item{labelpars}{a vector, or - when there are multiple samples or multiple guilds - a matrix indicating whether the parameters
-in initpars must remain fixed (0) during optimization, optimized (1), or - in the case of multiple samples or guilds - set equal
-to the parameter of the first sample/guild (2).}
+\item{idpars}{a vector stating whether the parameters in \code{initpars} should be optimized (1) or
+remain fixed (0).}
+
+\item{labelpars}{a vector, a list of vectors or a list of lists of vectors indicating the labels
+integers (starting at 1) of the parameters to be optimized and fixed. These integers correspond to
+the position in \code{initpars} and \code{idpars}. The order of the labels in
+the vector/list is first the metacommunity parameters (theta, and phi (for protracted speciation) or alpha
+(for density-dependence or abundance-dependent speciation)), then the dispersal parameters (I).
+See the example and the vignette for more explanation.}
 
 \item{model}{the chosen combination of metacommunity model and local community model
 as a vector, e.g. c('pm','dl') for a model with point mutation in the metacommunity and
@@ -29,7 +37,8 @@ The choices for the metacommunity model are: 'pm' (point mutation), 'rf' (random
 'pr' (protracted speciation), 'dd' (density-dependence).
 The choices for the local community model are: 'dl' (dispersal limitation), 'dd' (density-dependence).}
 
-\item{mult}{When set to 'mg' (the default) the loglikelihood for multiple guilds is computed.
+\item{mult}{When set to 'single' (the default), the loglikelihood for a single sample and single guild
+is computed. When set to 'mg', the loglikelihood for multiple guilds is computed.
 When set to 'ms' the loglikelihood for multiple samples from the same metacommunity is computed.}
 
 \item{tol}{a vector containing three numbers for the relative tolerance in the parameters, the relative tolerance in the function, and the absolute tolerance in the parameters.}
@@ -37,6 +46,8 @@ When set to 'ms' the loglikelihood for multiple samples from the same metacommun
 \item{maxiter}{sets the maximum number of iterations}
 
 \item{optimmethod}{sets the optimization method to be used, either subplex (default) or an alternative implementation of simplex.}
+
+\item{num_cycles}{the number of cycles of opimization. If set at Inf, it will do as many cycles as needed to meet the tolerance set for the target function.}
 }
 \description{
 Computes maximum loglikelihood and corresponding parameters for the requested model using the independent-species approach.
@@ -53,15 +64,15 @@ utils::data(fitresults);
 result <- SADISA_ML(
    abund = datasets$dset1.abunvec[[1]],
    initpars = fitresults$fit1a.parsopt[[1]],
-   labelpars = c(1,1),
+   idpars = c(1,1),
+   labelpars = c(1,2),
    model = c('pm','dl'),
    tol = c(1E-1, 1E-1, 1E-1)
    );
 # Note that tolerances should be set much lower than 1E-1 to get the best results.
 }
 \references{
-Haegeman, B. & Etienne, R.S. (2016). A general sampling formula for community abundance data. Methods in Ecology & Evolution. In review.
+Haegeman, B. & R.S. Etienne (2017). A general sampling formula for community structure data. Methods in Ecology & Evolution 8: 1506-1519. doi: 10.1111/2041-210X.12807
 }
 \keyword{model}
 \keyword{species-abundance-distribution}
-

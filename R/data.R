@@ -11,7 +11,7 @@
 #' }
 #' @usage data(datasets)
 #' @author Rampal S. Etienne & Bart Haegeman
-#' @source Condit et al. (2002). Beta-diversity in tropical forest trees. Science 295: 666-669.
+#' @source Condit et al. (2002). Beta-diversity in tropical forest trees. Science 295: 666-669. See also 11.	Janzen, T., B. Haegeman & R.S. Etienne (2015). A sampling formula for ecological communities with multiple dispersal syndromes. Journal of Theoretical Biology 387, 258-261.
 #' @format A list of 5 data sets. See description for information on each of these data sets.
 #' @keywords datasets
 NULL

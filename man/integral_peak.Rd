@@ -4,8 +4,8 @@
 \alias{integral_peak}
 \title{Computes integral of a very peaked function}
 \usage{
-integral_peak(logfun, xx = seq(-100, 10, 2), xcutoff = 2, ycutoff = 40,
-  ymaxthreshold = 1e-12)
+integral_peak(logfun, xx = seq(-100, 10, 2), xcutoff = 2,
+  ycutoff = 40, ymaxthreshold = 1e-12)
 }
 \arguments{
 \item{logfun}{the logarithm of the function to integrate}
@@ -25,6 +25,5 @@ the result of the integration
 # computes the logarithm of the integral of exp(logfun) from 0 to Inf under the following assumptions:
 }
 \references{
-Haegeman, B. & Etienne, R.S. (2016). A general sampling formula for community abundance data. Methods in Ecology & Evolution. In review.
+Haegeman, B. & R.S. Etienne (2017). A general sampling formula for community structure data. Methods in Ecology & Evolution. In press.
 }
-

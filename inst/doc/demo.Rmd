@@ -5,8 +5,8 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{"Using SADISA"}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}{inputenc}
 ---
 
 ## SADISA introduction
@@ -85,28 +85,43 @@ result
 
 Have a look at the test file SADISA_test.R included in the package for further examples of SADISA_loglik.
 
-Let us now try to find the maximum likelihood parameters for this model and this data set. We need to initialize the optimization by setting initial parameter values, for example:
+Let us now try to find the maximum likelihood parameters for this model and this data set. We need to initialize the optimization by setting initial parameter values and indicating which parameters need to be optimized, for example:
 
 ```{r}
 initpars <- c(40,2000)
+idpars <- c(1,1)
 ```
 
-We must also specify which parameter will be optimized or fixed. We store this information in the variable 'labelpars'. If we fix a parameter (at its initial value provided before), then 'labelpars' gets a 0. If we want to optimize it, we set 'labelpars' at 1. The third option is to set the parameter equal to another parameter. This is (only) useful for a case of multiple samples or multiple guilds where we want to use only one local community parameter that applies to all samples/guilds. Then 'labelpars' receives a 2. But this is not relevant here, because we have only one sample.
-
-If we want to only optimize the first parameter (theta in this model), then we would have put labelpars <- c(1,0). But let us optimize both parameters. So we set:
+Here we are optimizing both parameters, because idpars has a 1 in each element. If we just wanted to optimize one parameter, we would use
 
 ```{r}
-labelpars <- c(1,1)
+initpars <- c(40,2000)
+idpars <- c(0,1)
 ```
+
+So here we only optinmize I and give it an initial value of 2000. We must also specify whether some parameters are set equal to others or not. In this example, it does not make much sense to set the parameters equal, but we still show how to do this. We store this information in the variable 'labelpars'. In this case we use
+
+```{r}
+labelpars <- c(1,2)
+```
+
+which means that we are considering two parameter values (out of two) with labels 1 and 2. The 1 corresponds to the first parameter in initpars and idpars and the 2 to the second.
 
 To run the optimization we type:
 
-```{r}
-result <- SADISA_ML(abund = abund,initpars = initpars,labelpars = labelpars,model = model)
-result
-```
+result <- SADISA_ML(abund = abund,initpars = initpars,idpars = idpars, labelpars = labelpars,model = model)
 
-Let us look at one more example with multiple samples. We load the available data sets:
+The result is:
+
+The loglikelihood for the initial parameter values is -320.9138.
+
+Parameters after likelihood maximization:
+[1]   40.000 4016.133
+
+Maximum loglikelihood:
+ -319.1055 
+
+Let us look at an example with multiple samples. We load the available data sets:
 
 ```{r}
 data(datasets)
@@ -116,37 +131,156 @@ dataset$dset2.abunvec contains various data sets with multiple samples. Let us s
 
 ```{r}
 abund <- datasets$dset2.abunvec[[1]]
-abund
 ```
 
 Because this data set contains three samples we need to specify parameters for three samples, which we take from the file fitresult.RData provided with the package:
 
 ```{r}
 data(fitresults)
-initpars <- fitresults$fit4.parsopt[[1]]
-for(i in 1:3) names(initpars[[i]]) = c('theta','I')
-initpars
+pars <- fitresults$fit4.parsopt[[1]]
 ```
 
-Note that we have named the parameters. Let us fix $theta$ and optimize all the $I$ parameters assuming they are all equal. This can be coded in labelpars as follows:
+Note that we have named the parameters. Let us fix $theta$ and optimize the the $I$ parameters assuming they are all equal. This can be coded in labelpars, initpars and idpars as follows:
 
 ```{r}
-labelpars <- rbind(c(0,1),c(2,2),c(2,2))
-labelpars
-
+labelpars <- list(c(1,2),c(1,2),c(1,2))
+initpars <- c(pars[[1]][1],pars[[1]][2])
+idpars <- c(0,1)
 ```
 
-Here we set the labelpars for theta of the second and third sample at 2, but this has no meaning.
+Because the parameters to be optimized, I, are all assumed equal, they all receive a 2. The initial value of I will then be in initpars[2]. All $\theta$s are equal (but there is of course only one $\theta$), so they all receive a 1. Its fixed value is in initpars[1].
 
-Finally we run the optimization by adding the option mult = 'ms':
+Now we run the optimization by adding the option mult = 'ms':
 
-```{r}
-result <- SADISA_ML(abund = abund,initpars = initpars,labelpars = labelpars,model = model,mult = 'ms')
-result
-```
+result <- SADISA_ML(abund = abund,initpars = initpars,idpars = idpars, labelpars = labelpars,model = model,mult = 'ms')
+
+The result is:
+
+The loglikelihood for the initial parameter values is -1116.12.
+
+Parameters after likelihood maximization:
+[[1]]
+[1] 259.42034  44.45759
+
+[[2]]
+[1] 259.42034  44.45759
+
+[[3]]
+[1] 259.42034  44.45759
+
+Maximum loglikelihood:
+ -1116.12 
 
 We observe that the starting values were indeed the optimal values.
 
+Now we show an example where we no longer assume that all the I values are the same. We then use;
+
+```{r}
+labelpars <- list(c(1,2),c(1,3),c(1,4))
+initpars <- c(pars[[1]][1],pars[[1]][2],pars[[2]][2],pars[[3]][2])
+idpars <- c(0,1,1,1)
+```
+
+We run again the optimization by adding the option mult = 'ms':
+
+result <- SADISA_ML(abund = abund,initpars = initpars,idpars = idpars, labelpars = labelpars,model = model,mult = 'ms')
+
+The result is:
+
+The loglikelihood for the initial parameter values is -1116.12.
+
+Parameters after likelihood maximization:
+[[1]]
+[1] 259.42034  63.43168
+
+[[2]]
+[1] 259.4203  31.5572
+
+[[3]]
+[1] 259.42034  35.50356
+
+
+Maximum loglikelihood:
+ -1100.448 
+
+Assume now that the three samples actually represent three different guilds. Again we want to optimize the I parameters, but we keep $\theta$ fixed. We use the same structure:
+
+```{r}
+labelpars <- list(c(1,2),c(1,3),c(1,4))
+initpars <- c(pars[[1]][1],pars[[1]][2],pars[[2]][2],pars[[3]][2])
+idpars <- c(0,1,1,1)
+```
+
+and run the optimization, but with the option mult = 'mg':
+
+result <- SADISA_ML(abund = abund,initpars = initpars,idpars = idpars, labelpars = labelpars,model = model,mult = 'mg')
+
+The result is:
+
+The loglikelihood for the initial parameter values is -530.6148.
+
+Parameters after likelihood maximization:
+[[1]]
+[1] 259.4203  61.4082
+
+[[2]]
+[1] 259.42034  32.55765
+
+[[3]]
+[1] 259.42034  36.77088
+
+
+Maximum loglikelihood:
+ -522.001
+ 
+Finally, for a combination of multiple samples and multiple guilds, we set parameters as follows:
+
+```{r}
+abund1a <- abund[[1]]
+abund1b <- abund[[2]]
+abund1c <- abund[[3]]
+abund2 <- list(list(abund1a,abund1a),list(abund1b,abund1b),list(abund1c,abund1c))
+labelpars <- list(list(c(1,2),c(1,3)),list(c(1,2),c(1,3)),list(c(1,2),c(1,3)))
+initpars <- c(pars[[1]][1],pars[[1]][2],pars[[2]][2])
+idpars <- c(0,1,1)
+```
+
+Here we just made up a data set where the two guilds have identical species abundances. We set the I parameters for the two guilds to be different, but they are equal across samples. We fix $\theta$, but optimize these two I values. We now simply run the same script as before, but with option mult = 'both':
+
+result <- SADISA_ML(abund = abund2,initpars = initpars,idpars = idpars, labelpars = labelpars,model = model,mult = 'both')
+
+The result is:
+
+The loglikelihood for the initial parameter values is -2232.24.
+
+Parameters after likelihood maximization:
+[[1]]
+[[1]][[1]]
+[1] 259.42034  44.45759
+
+[[1]][[2]]
+[1] 259.42034  44.45759
+
+
+[[2]]
+[[2]][[1]]
+[1] 259.42034  44.45759
+
+[[2]][[2]]
+[1] 259.42034  44.45759
+
+
+[[3]]
+[[3]][[1]]
+[1] 259.42034  44.45759
+
+[[3]][[2]]
+[1] 259.42034  44.45759
+
+
+Maximum loglikelihood:
+ -2232.24 
+
 Have fun with SADISA!
 
-Haegeman, B. & Etienne, R.S. (2016). A general sampling formula for community abundance data. Methods in Ecology & Evolution. In review.
+Haegeman, B. & Etienne, R.S. (2016). A general sampling formula for community abundance data. Methods in Ecology & Evolution 8: 1506-1519.

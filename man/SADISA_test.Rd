@@ -4,14 +4,16 @@
 \alias{SADISA_test}
 \title{Tests SADISA for data sets included in the paper by Haegeman & Etienne}
 \usage{
-SADISA_test()
+SADISA_test(tol = 0.001)
+}
+\arguments{
+\item{tol}{tolerance of the test}
 }
 \description{
 Tests SADISA for data sets included in the paper by Haegeman & Etienne
 }
 \references{
-Haegeman, B. & Etienne, R.S. (2016). A general sampling formula for community abundance data. Methods in Ecology & Evolution. In review.
+Haegeman, B. & R.S. Etienne (2017). A general sampling formula for community structure data. Methods in Ecology & Evolution. In press.
 }
 \keyword{model}
 \keyword{species-abundance-distribution}
-

@@ -25,33 +25,46 @@ result
 
 ## ------------------------------------------------------------------------
 initpars <- c(40,2000)
+idpars <- c(1,1)
 
 ## ------------------------------------------------------------------------
-labelpars <- c(1,1)
+initpars <- c(40,2000)
+idpars <- c(0,1)
 
 ## ------------------------------------------------------------------------
-result <- SADISA_ML(abund = abund,initpars = initpars,labelpars = labelpars,model = model)
-result
+labelpars <- c(1,2)
 
 ## ------------------------------------------------------------------------
 data(datasets)
 
 ## ------------------------------------------------------------------------
 abund <- datasets$dset2.abunvec[[1]]
-abund
 
 ## ------------------------------------------------------------------------
 data(fitresults)
-initpars <- fitresults$fit4.parsopt[[1]]
-for(i in 1:3) names(initpars[[i]]) = c('theta','I')
-initpars
+pars <- fitresults$fit4.parsopt[[1]]
 
 ## ------------------------------------------------------------------------
-labelpars <- rbind(c(0,1),c(2,2),c(2,2))
-labelpars
-
+labelpars <- list(c(1,2),c(1,2),c(1,2))
+initpars <- c(pars[[1]][1],pars[[1]][2])
+idpars <- c(0,1)
 
 ## ------------------------------------------------------------------------
-result <- SADISA_ML(abund = abund,initpars = initpars,labelpars = labelpars,model = model,mult = 'ms')
-result
+labelpars <- list(c(1,2),c(1,3),c(1,4))
+initpars <- c(pars[[1]][1],pars[[1]][2],pars[[2]][2],pars[[3]][2])
+idpars <- c(0,1,1,1)
+
+## ------------------------------------------------------------------------
+labelpars <- list(c(1,2),c(1,3),c(1,4))
+initpars <- c(pars[[1]][1],pars[[1]][2],pars[[2]][2],pars[[3]][2])
+idpars <- c(0,1,1,1)
+
+## ------------------------------------------------------------------------
+abund1a <- abund[[1]]
+abund1b <- abund[[2]]
+abund1c <- abund[[3]]
+abund2 <- list(list(abund1a,abund1a),list(abund1b,abund1b),list(abund1c,abund1c))
+labelpars <- list(list(c(1,2),c(1,3)),list(c(1,2),c(1,3)),list(c(1,2),c(1,3)))
+initpars <- c(pars[[1]][1],pars[[1]][2],pars[[2]][2])
+idpars <- c(0,1,1)
 
