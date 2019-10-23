@@ -160,7 +160,6 @@ SADISA_loglik <- function(
                   parsnew <- c(parsnew,pars[[cc]][3]);
                }
             }
-            #loglik <- loglik + pmdlms_llik(pars = parsnew,sf = sf
             loglik <- loglik + ms_llik(pars = parsnew,sf = sf,model = model);
          }
       }

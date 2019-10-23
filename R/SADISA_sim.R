@@ -50,13 +50,11 @@ SADISA_sim <- function(parsmc,ii,jj,model = c('pm','dl'),mult = 'single',nsim = 
       {
          ff <- checkiijj(ii,jj,mult); ii <- ff$ii; jj <- ff$jj; rm(ff);
          qq <- jj/(ii + jj);
-         #out[[i]] <- pmdlsing_sim(th,ii,qq);
          out[[i]] <- ms_sim(parsmc,ii,qq,model);
       } else if(mult == 'ms')
       {
          ff <- checkiijj(ii,jj,mult); ii <- ff$ii; jj <- ff$jj; rm(ff);
          qq <- jj/(ii + jj);
-         #out[[i]] <- pmdlmult_sim(th,ii,qq);
          out[[i]] <- ms_sim(parsmc,ii,qq,model)
       } else if(mult == 'mg')
       {
@@ -65,7 +63,6 @@ SADISA_sim <- function(parsmc,ii,jj,model = c('pm','dl'),mult = 'single',nsim = 
          qq <- jj/(ii + jj);
          for(g in 1:loopguilds)
          {
-            #out[[i]][[g]] <- pmdlsing_sim(th,ii[g],qq[g]);
             out[[i]][[g]] <- ms_sim(parsmc,ii[g],qq[g],model);
          }
       } else if(mult == 'both')
@@ -95,7 +92,6 @@ SADISA_sim <- function(parsmc,ii,jj,model = c('pm','dl'),mult = 'single',nsim = 
             }
             qq <- jj2/(ii2 + jj2);
             #cat(paste('Simulation ', i,' and guild ',g,sep = '')); cat('\n');
-            #out[[i]][[g]] <- pmdlmult_sim(th,ii2,qq);
             out[[i]][[g]] <- ms_sim(parsmc,ii2,qq,model);
          }
          out2 <- out;
